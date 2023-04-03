@@ -6,7 +6,7 @@
 #    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/04/03 14:30:29 by mleitner         ###   ########.fr        #
+#    Updated: 2023/04/03 16:42:41 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ BONUSOBJSLIST	:= ${BONUSSRCSLIST:.c=.o}
 BONUSOBJS		:= $(addprefix ${OBJSDIR}, ${BONUSOBJSLIST})
 HEADDIR			:= ./inc/
 
-INCS			:= -I${HEADDIR}
+INCS			:= -I${HEADDIR} -pthread
 
 ${NAME}:		${OBJSDIR} ${OBJS}
 				${CC} ${FLAGS} ${DEBUG} ${OBJS} -o ${NAME} ${INCS}

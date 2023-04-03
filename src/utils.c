@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:04:54 by mleitner          #+#    #+#             */
-/*   Updated: 2023/04/03 14:31:11 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/04/03 17:27:16 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,16 @@ t_rules	*set_rules(int argc, char **argv)
 	t_rules			*rules;
 
 	rules = malloc(sizeof(t_rules));
-	rules->phil = ft_atoi(argv[1]);
-	rules->ttd = ft_atoi(argv[2]);
-	rules->tte = ft_atoi(argv[3]);
-	rules->tts = ft_atoi(argv[4]);
+	rules->phil_n = ft_atoi(argv[1]);
+	rules->die = ft_atoi(argv[2]);
+	rules->eat = ft_atoi(argv[3]);
+	rules->sleep = ft_atoi(argv[4]);
 	if (argc == 5)
-		rules->eat = 0;
+		rules->eat_n = 0;
 	else
-		rules->eat = ft_atoi(argv[5]);
-	if (rules->phil > 200 || !(rules->phil || \
-	rules->ttd || rules->tte || rules->tts))
+		rules->eat_n = ft_atoi(argv[5]);
+	if (rules->phil_n > 200 || !(rules->phil_n || \
+	rules->die || rules->eat || rules->sleep))
 	{
 		printf("Error: Exceeded range for values.\n");
 		free (rules);
