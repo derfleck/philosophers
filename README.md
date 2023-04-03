@@ -16,7 +16,7 @@ The goal of this program is to create an algorithm which prevents the philosophe
     
     - **number_of_philosophers**: needs to be at least 1
     
-    - **time_to_die** (in milliseconds): a philosopher needs to eat at least once within this timeframe after his last meal, otherwise they die
+    - **time_to_die** (in milliseconds): a philosopher needs to eat at least once within this timeframe after the beginning of his last meal, otherwise they die
     
     - **time_to_eat** (in milliseconds): time it takes a philosopher to eat
     
@@ -68,6 +68,9 @@ Additionally to the general rules, the mandatory part has a specific set of rule
 | pthread_mutex_destroy | pthread.h  | destroys a mutex object and all associated resources, which needs to be unlocked before calling                        | int, 0 on success, errno when error                           |
 | pthread_mutex_lock    | pthread.h  | locks a mutex object, therefore making it impossible for another thread to become active before it is unlocked         | int, 0 on success, errno when error                           |
 | pthread_mutex_unlock  | pthread.h  | unlocks a mutex object                                                                                                 | int, 0 on success, errno when error                           |
+
+### possible approach
+[This user explained his approach very well](https://github.com/TommyJD93/Philosophers), step by step.
 
 ## Bonus rules
 

@@ -1,26 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/30 18:25:11 by mleitner          #+#    #+#             */
-/*   Updated: 2023/03/31 17:55:49 by mleitner         ###   ########.fr       */
+/*   Created: 2023/04/03 14:04:54 by mleitner          #+#    #+#             */
+/*   Updated: 2023/04/03 14:31:11 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <pthread.h>
-#include <stdlib.h>
-
-typedef struct s_rules{
-	int	phil;
-	int	ttd;
-	int	tte;
-	int	tts;
-	int	eat;
-}	t_rules;
+#include "philosophers.h"
 
 long	ft_atoi(char *s)
 {
@@ -69,17 +59,26 @@ t_rules	*set_rules(int argc, char **argv)
 	return (rules);
 }
 
-int	main(int argc, char **argv)
+//converts time from micro (thousandth) to milliseconds (millionth)
+uint64_t	get_time(void)
 {
-	t_rules			*rules;
+	struct timeval	tv;
 
-	if (argc < 5 || argc > 6)
+	if (gettimeofday(&tv, NULL) == 0)
+		return ((tv.tv_sec * (uint64_t)1000) + (tv.tv_usec / 1000));
+	else
+		return (0);
+}
+
+//recodes usleep for more precision, sleeps for a tenth of ms time
+int	ft_usleep(__useconds_t time)
+{
+	uint64_t	start;
+
+	start = get_time();
+	while (get_time() - start < time)
 	{
-		printf("Error: Please provide four or five arguments.\n");
-		return (0);
+		usleep(time / 10);
 	}
-	rules = set_rules(argc, argv);
-	if (!rules)
-		return (0);
-	printf("number of philosophers: %d\ntime to die: %d\ntime to eat: %d\ntime to sleep: %d\nnumber of times each philosopher must eat: %d\n", rules->phil, rules->ttd, rules->tte, rules->tts, rules->eat);
+	return (0);
 }
