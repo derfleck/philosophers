@@ -6,7 +6,7 @@
 #    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/04/03 16:42:41 by mleitner         ###   ########.fr        #
+#    Updated: 2023/04/05 17:24:38 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ DEBUG			:= -g
 
 SRCSDIR			:= ./src/
 SRCSLIST		:= main.c \
-					utils.c
+					utils.c \
+					init.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 BONUSSRCSLIST	:= ${SRCSLIST:.c=_bonus.c}
 BONUSSRCS		:= $(addprefix ${SRCSDIR}, ${BONUSSRCSLIST})
@@ -27,6 +28,7 @@ BONUSSRCS		:= $(addprefix ${SRCSDIR}, ${BONUSSRCSLIST})
 OBJSDIR			:= ./obj/
 OBJSLIST		:= ${SRCSLIST:.c=.o}
 OBJS			:= $(addprefix ${OBJSDIR}, ${OBJSLIST})
+
 BONUSOBJSLIST	:= ${BONUSSRCSLIST:.c=.o}
 BONUSOBJS		:= $(addprefix ${OBJSDIR}, ${BONUSOBJSLIST})
 HEADDIR			:= ./inc/
@@ -36,7 +38,7 @@ INCS			:= -I${HEADDIR} -pthread
 ${NAME}:		${OBJSDIR} ${OBJS}
 				${CC} ${FLAGS} ${DEBUG} ${OBJS} -o ${NAME} ${INCS}
 
-${BONUSNAME}:	${MLX} ${LIBFT} ${OBJSDIR} ${BONUSOBJS}
+${BONUSNAME}:	${OBJSDIR} ${BONUSOBJS}
 				${CC} ${FLAGS} ${DEBUG} ${BONUSOBJS} -o ${BONUSNAME} ${INCS}
 
 ${OBJSDIR}%.o:	${SRCSDIR}%.c
@@ -61,4 +63,4 @@ re:				fclean all
 bonus:			${BONUSNAME}
 
 test:			all
-				./${NAME} 1 2 3 4 5
+				./${NAME} 5 100 30 20

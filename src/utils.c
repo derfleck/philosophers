@@ -46,7 +46,7 @@ t_rules	*set_rules(int argc, char **argv)
 	rules->eat = ft_atoi(argv[3]);
 	rules->sleep = ft_atoi(argv[4]);
 	if (argc == 5)
-		rules->eat_n = 0;
+		rules->eat_n = -1;
 	else
 		rules->eat_n = ft_atoi(argv[5]);
 	if (rules->phil_n > 200 || !(rules->phil_n || \
