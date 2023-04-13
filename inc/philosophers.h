@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:02:16 by mleitner          #+#    #+#             */
-/*   Updated: 2023/04/05 16:50:22 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/04/05 16:50:31 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_philo{
 	t_rules			*rules;
 	pthread_mutex_t *l_fork;
 	pthread_mutex_t *r_fork;
+	pthread_mutex_t lock;
 }	t_philo;
 
 //utils functions

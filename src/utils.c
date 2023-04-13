@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:04:54 by mleitner          #+#    #+#             */
-/*   Updated: 2023/04/03 17:27:16 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/04/05 16:43:12 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_rules	*set_rules(int argc, char **argv)
 	return (rules);
 }
 
-//converts time from micro (thousandth) to milliseconds (millionth)
+//converts time from micro (millionth) to milliseconds (thousandth)
 uint64_t	get_time(void)
 {
 	struct timeval	tv;

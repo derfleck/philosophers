@@ -6,7 +6,7 @@
 #    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/04/05 17:24:38 by mleitner         ###   ########.fr        #
+#    Updated: 2023/04/06 12:36:14 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,4 +63,4 @@ re:				fclean all
 bonus:			${BONUSNAME}
 
 test:			all
-				./${NAME} 5 100 30 20
+				./${NAME} 1 800 200 200

@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 16:39:36 by mleitner          #+#    #+#             */
-/*   Updated: 2023/04/05 17:30:11 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/04/12 10:02:54 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ void	thread_start(t_philo *philo)
 	philo->rules->start_time = get_time();
 	while (i < philo->rules->phil_n)
 	{
-		pthread_create(&philo[i].tid, NULL, do_philo, &philo[i]);
+		pthread_create(&philo[i].tid, NULL, &do_philo, &philo[i]);
+		philo[i].last_eaten = philo->rules->start_time;
 		i++;
+		//ft_usleep(1);
 	}
 	i = 0;
 	while (i < philo->rules->phil_n)
@@ -33,44 +35,86 @@ void	thread_start(t_philo *philo)
 
 void	take_fork(t_philo *philo)
 {
-	pthread_mutex_lock(philo->l_fork);
-	printf("%ld %d has taken a fork\n", get_time() - philo->rules->start_time, philo->num);
 	pthread_mutex_lock(philo->r_fork);
+	printf("%ld %d has taken a fork\n", get_time() - philo->rules->start_time, philo->num);
+	pthread_mutex_lock(philo->l_fork);
 	printf("%ld %d has taken a fork\n", get_time() - philo->rules->start_time, philo->num);
 }
 
 void	drop_fork(t_philo *philo)
 {
-	pthread_mutex_unlock(philo->l_fork);
 	pthread_mutex_unlock(philo->r_fork);
+	pthread_mutex_unlock(philo->l_fork);
+	pthread_mutex_lock(&philo->lock);
+	philo->state = 3;
+	pthread_mutex_unlock(&philo->lock);
 	printf("%ld %d is sleeping\n", get_time() - philo->rules->start_time, philo->num);
 	ft_usleep(philo->rules->sleep);
 }
 
 void	eat(t_philo *philo)
 {
-	take_fork(philo);
-	printf("%ld %d is eating\n", get_time() - philo->rules->start_time, philo->num);
-	ft_usleep(philo->rules->eat);
-	philo->last_eaten = get_time();
-	drop_fork(philo);
+	if (philo->state && get_time() <= philo->last_eaten + philo->rules->die)
+	{
+		take_fork(philo);
+		pthread_mutex_lock(&philo->lock);
+		philo->state = 2;
+		pthread_mutex_unlock(&philo->lock);
+		philo->last_eaten = get_time();
+		printf("%ld %d is eating\n", philo->last_eaten - philo->rules->start_time, philo->num);
+		ft_usleep(philo->rules->eat);
+		drop_fork(philo);
+	}
+}
+
+void	*lifeguard(void *arg)
+{
+	t_philo		*philo;
+
+	philo = (t_philo*) arg;
+	pthread_mutex_lock(&philo->lock);
+	while (philo->state && get_time() < philo->last_eaten + philo->rules->die)
+	{
+		//printf("P%d: state %d\n", philo->num, philo->state);
+		if (get_time() >= (philo->last_eaten + philo->rules->die) && philo->state != 2)
+		{
+			//pthread_mutex_lock(&philo->lock);
+			philo->state = 0;
+			//pthread_mutex_unlock(&philo->lock);
+			printf("%ld %d died\n", get_time() - philo->rules->start_time, philo->num);
+			return NULL;
+		}
+		ft_usleep(1);
+	}
+	pthread_mutex_unlock(&philo->lock);
+	return NULL;
 }
 
 void	*do_philo(void *arg)
 {
 	t_philo 		*philo;
+	pthread_t	*t2;
 
 	philo = (t_philo*) arg;
-	while (1)
+	t2 = malloc(sizeof(pthread_t));
+	pthread_create(t2, NULL, lifeguard, philo);
+	while (philo->state > 0)
 	{
-		if (get_time() > (philo->last_eaten + philo->rules->die))
+		//if (get_time() > (philo->last_eaten + philo->rules->die))
+		//{
+		//	printf("%ld %d died\n", get_time() - philo->rules->start_time, philo->num);
+		//	break ;
+		//}
+		if (philo->state > 0 && get_time() < philo->last_eaten + philo->rules->die)
 		{
-			printf("%ld %d died\n", get_time() - philo->rules->start_time, philo->num);
-			break ;
+			printf("%ld %d is thinking\n", get_time() - philo->rules->start_time, philo->num);
+			pthread_mutex_lock(&philo->lock);
+			philo->state = 1;
+			pthread_mutex_unlock(&philo->lock);
+			eat(philo);
 		}
-		eat(philo);
-		printf("%ld %d is thinking\n", get_time() - philo->rules->start_time, philo->num);
 	}
+	pthread_join(*t2, NULL);
 	return NULL;
 }
 
@@ -85,6 +129,7 @@ t_philo	init_philos(t_rules *rules, int n, pthread_mutex_t *forks)
 	tmp.r_fork = forks + (n % rules->phil_n);
 	tmp.l_fork = forks + ((n + 1) % rules->phil_n);
 	tmp.last_eaten = get_time();
+	pthread_mutex_init(&tmp.lock, NULL);
 	return (tmp);
 }
 
