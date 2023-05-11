@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 18:25:11 by mleitner          #+#    #+#             */
-/*   Updated: 2023/04/05 16:42:20 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/05/11 17:59:09 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,16 @@
 
 int	main(int argc, char **argv)
 {
-	t_rules			*rules;
+	t_rules			rules;
 
+	rules.stop = 0;
 	if (argc < 5 || argc > 6)
 	{
 		printf("Error: Please provide four or five arguments.\n");
 		return (0);
 	}
-	rules = set_rules(argc, argv);
-	if (!rules)
-		return (0);
-	create_philos(rules);
-	/*printf("number of philosophers: %d\ntime to die: \
-	%d\ntime to eat: %d\ntime to sleep: %d\nnumber of \
-	times each philosopher must eat: %d\n", rules->phil_n, \
-	rules->die, rules->eat, rules->sleep, rules->eat_n);*/
+	set_rules(&rules, argc, argv);
+	if (!create_philos(&rules))
+		printf("Error while allocating memory");
 	return (0);
 }

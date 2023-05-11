@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:04:54 by mleitner          #+#    #+#             */
-/*   Updated: 2023/04/05 16:43:12 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/05/11 16:20:48 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,27 +36,26 @@ long	ft_atoi(char *s)
 	return (val);
 }
 
-t_rules	*set_rules(int argc, char **argv)
+//fills the t_rules struct with values passed as arguments
+//exits if too many philosophers or negative values
+void	set_rules(t_rules *rules, int argc, char **argv)
 {
-	t_rules			*rules;
-
-	rules = malloc(sizeof(t_rules));
 	rules->phil_n = ft_atoi(argv[1]);
 	rules->die = ft_atoi(argv[2]);
 	rules->eat = ft_atoi(argv[3]);
 	rules->sleep = ft_atoi(argv[4]);
 	if (argc == 5)
-		rules->eat_n = -1;
+		rules->eat_n = 0;
 	else
 		rules->eat_n = ft_atoi(argv[5]);
 	if (rules->phil_n > 200 || !(rules->phil_n || \
-	rules->die || rules->eat || rules->sleep))
+	rules->die || rules->eat || rules->sleep) || \
+	(rules->phil_n < 0 || rules->die < 0 || rules->eat < 0 \
+	|| rules->sleep < 0 || rules->eat_n < 0))
 	{
-		printf("Error: Exceeded range for values.\n");
-		free (rules);
-		return (NULL);
+		printf("Error: At least one value is out of range.\n");
+		exit(0);
 	}
-	return (rules);
 }
 
 //converts time from micro (millionth) to milliseconds (thousandth)

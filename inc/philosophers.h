@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:02:16 by mleitner          #+#    #+#             */
-/*   Updated: 2023/04/05 16:50:31 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/05/11 18:27:23 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,42 +19,54 @@
 # include <unistd.h>
 # include <stdint.h>
 
+typedef struct s_philo	t_philo;
+
 typedef struct s_rules{
-	int				phil_n;
-	int				die;
-	int				eat;
-	int				sleep;
-	int				eat_n;
-	uint64_t 		start_time;
-	struct t_philo	*phil;
+	long			phil_n;
+	long			die;
+	long			eat;
+	long			sleep;
+	long			eat_n;
+	int				stop;
+	uint64_t		start_time;
+	t_philo			*phil;
+	pthread_mutex_t	lock_print;
+	pthread_mutex_t	lock_eat;
+	pthread_mutex_t	*forks;
 }	t_rules;
 
 //state: dead 0, thinking 1, eating 2, sleeping 3
 typedef struct s_philo{
-	int 			num;
+	unsigned int	num;
+	unsigned int	meals;
 	pthread_t		tid;
-	int				meals;
 	uint64_t		last_eaten;
-	int				state;
+	unsigned int	state;
 	t_rules			*rules;
-	pthread_mutex_t *l_fork;
-	pthread_mutex_t *r_fork;
-	pthread_mutex_t lock;
+	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	*r_fork;
 }	t_philo;
 
 //utils functions
-long		ft_atoi(char *s);
-t_rules		*set_rules(int argc, char **argv);
-uint64_t	get_time(void);
-int			ft_usleep(__useconds_t time);
+long			ft_atoi(char *s);
+void			set_rules(t_rules *rules, int argc, char **argv);
+uint64_t		get_time(void);
+int				ft_usleep(__useconds_t time);
 
 //init functions
-t_philo	*create_philos(t_rules *rules);
-pthread_mutex_t *init_forks(t_rules *rules);
-t_philo	init_philos(t_rules *rules, int n, pthread_mutex_t *forks);
-void	*do_philo(void *arg);
-void	take_fork(t_philo *philo);
-void	drop_fork(t_philo *philo);
+t_philo			*create_philos(t_rules *rules);
+pthread_mutex_t	*init_forks(t_rules *rules);
+void			init_philos(t_rules *rules, pthread_mutex_t *forks);
 
+//thread functions
+void			status_check(t_philo *philo, t_rules *rules);
+void			thread_kill(t_philo *philo, t_rules *rules);
+int				thread_start(t_philo *philo);
+
+//routine functions
+void			print_status(char *str, t_philo *philo, int status);
+void			take_fork(t_philo *philo);
+void			eat(t_philo *philo);
+void			*do_philo(void *arg);
 
 #endif

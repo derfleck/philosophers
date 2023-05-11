@@ -20,7 +20,9 @@ DEBUG			:= -g
 SRCSDIR			:= ./src/
 SRCSLIST		:= main.c \
 					utils.c \
-					init.c
+					init.c \
+					threads.c \
+					routine.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 BONUSSRCSLIST	:= ${SRCSLIST:.c=_bonus.c}
 BONUSSRCS		:= $(addprefix ${SRCSDIR}, ${BONUSSRCSLIST})
