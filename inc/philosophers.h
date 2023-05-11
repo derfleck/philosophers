@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:02:16 by mleitner          #+#    #+#             */
-/*   Updated: 2023/05/11 18:27:23 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/05/11 18:52:02 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_rules{
 	long			sleep;
 	long			eat_n;
 	int				stop;
+	int 			all_eat;
 	uint64_t		start_time;
 	t_philo			*phil;
 	pthread_mutex_t	lock_print;
@@ -35,13 +36,11 @@ typedef struct s_rules{
 	pthread_mutex_t	*forks;
 }	t_rules;
 
-//state: dead 0, thinking 1, eating 2, sleeping 3
 typedef struct s_philo{
 	unsigned int	num;
 	unsigned int	meals;
 	pthread_t		tid;
 	uint64_t		last_eaten;
-	unsigned int	state;
 	t_rules			*rules;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
@@ -54,7 +53,7 @@ uint64_t		get_time(void);
 int				ft_usleep(__useconds_t time);
 
 //init functions
-t_philo			*create_philos(t_rules *rules);
+int				create_philos(t_rules *rules);
 pthread_mutex_t	*init_forks(t_rules *rules);
 void			init_philos(t_rules *rules, pthread_mutex_t *forks);
 

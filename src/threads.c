@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 18:24:22 by mleitner          #+#    #+#             */
-/*   Updated: 2023/05/11 18:24:33 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/05/11 19:22:09 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	status_check(t_philo *philo, t_rules *rules)
 {
 	int	i;
 
-	while (!rules->stop)
+	while (!rules->all_eat)
 	{
 		i = 0;
 		while (i < rules->phil_n && !rules->stop)
@@ -37,8 +37,8 @@ void	status_check(t_philo *philo, t_rules *rules)
 		while (rules->eat_n && i < rules->phil_n && \
 				philo[i].meals >= rules->eat_n)
 			i++;
-		if (i == rules->eat_n)
-			rules->stop = 1;
+		if (i == rules->phil_n)
+			rules->all_eat = 1;
 	}
 }
 
@@ -77,7 +77,7 @@ int	thread_start(t_philo *philo)
 	{
 		philo[i].last_eaten = philo->rules->start_time;
 		if (pthread_create(&philo[i].tid, NULL, \
-		&do_philo, &philo[i]))
+		do_philo, &philo[i]))
 			return (0);
 		i++;
 	}
