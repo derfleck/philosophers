@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:02:16 by mleitner          #+#    #+#             */
-/*   Updated: 2023/05/12 11:08:02 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:57:26 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 # include <stdint.h>
+# include <string.h>
 
 typedef struct s_philo	t_philo;
 
@@ -28,7 +29,7 @@ typedef struct s_rules{
 	long			sleep;
 	long			eat_n;
 	int				stop;
-	int 			all_eat;
+	int				all_eat;
 	uint64_t		start_time;
 	t_philo			*phil;
 	pthread_mutex_t	lock_print;
