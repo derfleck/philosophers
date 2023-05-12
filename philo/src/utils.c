@@ -6,12 +6,14 @@
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:04:54 by mleitner          #+#    #+#             */
-/*   Updated: 2023/05/11 16:20:48 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:52:49 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "../inc/philosophers.h"
 
+//modified atoi that only converts positive numbers
+//illegal characters (no whitespace/number) returns -1
 long	ft_atoi(char *s)
 {
 	unsigned int	i;
@@ -32,7 +34,7 @@ long	ft_atoi(char *s)
 	while (s[i] && s[i] == 32)
 		i++;
 	if ((s[i] < '0' || s[i] > '9') && s[i])
-		return (0);
+		return (-1);
 	return (val);
 }
 
@@ -64,20 +66,18 @@ uint64_t	get_time(void)
 	struct timeval	tv;
 
 	if (gettimeofday(&tv, NULL) == 0)
-		return ((tv.tv_sec * (uint64_t)1000) + (tv.tv_usec / 1000));
+		return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 	else
 		return (0);
 }
 
 //recodes usleep for more precision, sleeps for a tenth of ms time
-int	ft_usleep(__useconds_t time)
+void	ft_usleep(uint64_t time)
 {
 	uint64_t	start;
 
 	start = get_time();
+	usleep(time * 990);
 	while (get_time() - start < time)
-	{
-		usleep(time / 10);
-	}
-	return (0);
+		usleep(time);
 }

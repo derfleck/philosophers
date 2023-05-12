@@ -6,12 +6,12 @@
 #    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/04/06 12:36:14 by mleitner         ###   ########.fr        #
+#    Updated: 2023/05/12 09:59:35 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME			:= philosophers
-BONUSNAME		:= philosophers_bonus
+NAME			:= philo
+BONUSNAME		:= philo_bonus
 CC				:= cc
 RM		    	:= rm -f
 FLAGS			:= -Wall -Wextra -Werror

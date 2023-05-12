@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 18:26:18 by mleitner          #+#    #+#             */
-/*   Updated: 2023/05/11 19:22:58 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:11:51 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	print_status(char *str, t_philo *philo, int status)
 	pthread_mutex_lock(&philo->rules->lock_print);
 	if (!philo->rules->stop && !philo->rules->all_eat)
 		printf("%ld %d %s", get_time() - philo->rules->start_time, \
-		philo->num, str);
+		philo->num + 1, str);
 	if (status)
 		pthread_mutex_unlock(&philo->rules->lock_print);
 }
@@ -55,12 +55,12 @@ void	*do_philo(void *arg)
 
 	philo = (t_philo *) arg;
 	rules = philo->rules;
-	if (philo->num % 2 && rules->phil_n > 1)
-		ft_usleep(rules->eat / 50);
+	if ((philo->num + 1) % 2 && rules->phil_n > 1)
+		ft_usleep(rules->eat);
 	while (!rules->stop && !rules->all_eat)
 	{
 		eat(philo);
-		print_status("is sleeping \n", philo, 1);
+		print_status("is sleeping\n", philo, 1);
 		ft_usleep(rules->sleep);
 		print_status("is thinking\n", philo, 1);
 	}

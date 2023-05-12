@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:02:16 by mleitner          #+#    #+#             */
-/*   Updated: 2023/05/11 18:52:02 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:08:02 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef struct s_philo{
 long			ft_atoi(char *s);
 void			set_rules(t_rules *rules, int argc, char **argv);
 uint64_t		get_time(void);
-int				ft_usleep(__useconds_t time);
+void			ft_usleep(uint64_t time);
 
 //init functions
 int				create_philos(t_rules *rules);

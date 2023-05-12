@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 18:24:22 by mleitner          #+#    #+#             */
-/*   Updated: 2023/05/11 19:22:09 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/05/12 10:17:30 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	thread_kill(t_philo *philo, t_rules *rules)
 	int	i;
 
 	if (rules->phil_n == 1)
-		pthread_detach(philo[0].tid);
+		pthread_detach(philo->tid);
 	else
 	{
 		i = 0;
