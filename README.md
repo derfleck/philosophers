@@ -6,6 +6,9 @@ One or more philosophers sit at a table, there's one fork between each of them, 
 
 The goal of this program is to create an algorithm which prevents the philosophers from dying.
 
+### Important point regarding leaks
+When launching this program with only one thread, the single thread will be spun down using pthread_detach instead of pthread_join. This immediately detaches the thread from the main thread instead of waiting for the main thread to finish (see behaviour [described here](https://sites.ualberta.ca/dept/chemeng/AIX-43/share/man/info/C/a_doc_lib/libs/basetrf1/pthread_join.htm)). This will cause valgrind to show a possible leak, but in fact it's fine, as valgrind only operates until the main thread finishes (see [here](https://stackoverflow.com/questions/20893358/a-detached-pthread-causes-memory-leaks)). For debugging leaks in threads I found [this article](http://bl0rg.krunch.be/memleak-pthreads.html) regarding memcheck and [valgrind massif](https://valgrind.org/docs/manual/ms-manual.html) very helpful.
+
 ## General Rules
 
 - No global variables
