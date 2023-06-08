@@ -36,7 +36,7 @@ static int	*init_int_arr(t_rules *rules)
 	}
 	while (i < rules->phil_n)
 		forks_val[i++] = 1;
-	return (forks_val);	
+	return (forks_val);
 }
 
 //initializes philosophers struct values

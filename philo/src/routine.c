@@ -87,12 +87,5 @@ void	*do_philo(void *arg)
 		ft_usleep(rules->sleep);
 		print_status("is thinking\n", philo, 1);
 	}
-/* 	while (!rules->stop && !rules->all_eat)
-	{
-		eat(philo);
-		print_status("is sleeping\n", philo, 1);
-		ft_usleep(rules->sleep);
-		print_status("is thinking\n", philo, 1);
-	} */
 	return (NULL);
 }

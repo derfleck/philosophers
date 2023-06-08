@@ -12,6 +12,20 @@
 
 #include "../inc/philosophers.h"
 
+//helper to check if philo have eaten all meals
+//(if specified as argument)
+static void	eat_check(t_philo *philo, t_rules *rules)
+{
+	int	i;
+
+	i = 0;
+	while (rules->eat_n && i < rules->phil_n && \
+			philo[i].meals >= rules->eat_n)
+		i++;
+	if (i == rules->phil_n)
+		rules->all_eat = 1;
+}
+
 //checks continuously if threads are alive or have eaten as required
 void	status_check(t_philo *philo, t_rules *rules)
 {
@@ -35,12 +49,7 @@ void	status_check(t_philo *philo, t_rules *rules)
 		}
 		if (rules->stop)
 			break ;
-		i = 0;
-		while (rules->eat_n && i < rules->phil_n && \
-				philo[i].meals >= rules->eat_n)
-			i++;
-		if (i == rules->phil_n)
-			rules->all_eat = 1;
+		eat_check(philo, rules);
 	}
 }
 
