@@ -36,6 +36,7 @@ typedef struct s_rules{
 	pthread_mutex_t	lock_eat;
 	pthread_mutex_t lock_stop_all_eat;
 	pthread_mutex_t	*forks;
+	int				*forks_val;
 }	t_rules;
 
 typedef struct s_philo{
@@ -46,6 +47,8 @@ typedef struct s_philo{
 	t_rules			*rules;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
+	int				*l_fork_val;
+	int				*r_fork_val;
 }	t_philo;
 
 //utils functions

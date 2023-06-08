@@ -62,6 +62,7 @@ void	thread_kill(t_philo *philo, t_rules *rules)
 	pthread_mutex_destroy(&rules->lock_stop_all_eat);
 	free(philo);
 	free(rules->forks);
+	free(rules->forks_val);
 }
 
 //starts all threads, initializes status check, which runs

@@ -28,6 +28,8 @@ void	print_status(char *str, t_philo *philo, int status)
 void	take_fork(t_philo *philo)
 {
 	pthread_mutex_lock(philo->l_fork);
+	if (*(philo->l_fork_val) == 1)
+		*(philo->l_fork_val) = 0;
 	print_status("has taken a fork\n", philo, 1);
 	if (philo->l_fork == philo->r_fork)
 	{
@@ -35,6 +37,8 @@ void	take_fork(t_philo *philo)
 		return ;
 	}
 	pthread_mutex_lock(philo->r_fork);
+	if (*(philo->r_fork_val) == 1)
+		*(philo->r_fork_val) = 0;
 	print_status("has taken a fork\n", philo, 1);
 }
 
@@ -47,9 +51,15 @@ void	eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->rules->lock_eat);
 	ft_usleep(philo->rules->eat);
 	philo->meals++;
+	if (*(philo->l_fork_val) == 0)
+		*(philo->l_fork_val) = 1;
 	pthread_mutex_unlock(philo->l_fork);
 	if (philo->l_fork != philo->r_fork)
+	{
 		pthread_mutex_unlock(philo->r_fork);
+		if (*(philo->r_fork_val) == 0)
+			*(philo->r_fork_val) = 1;
+	}
 }
 
 //routine for thread, only stops if philosopher dies
