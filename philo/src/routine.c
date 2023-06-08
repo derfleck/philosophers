@@ -29,6 +29,11 @@ void	take_fork(t_philo *philo)
 {
 	pthread_mutex_lock(philo->l_fork);
 	print_status("has taken a fork\n", philo, 1);
+	if (philo->l_fork == philo->r_fork)
+	{
+		ft_usleep(philo->rules->die);
+		return ;
+	}
 	pthread_mutex_lock(philo->r_fork);
 	print_status("has taken a fork\n", philo, 1);
 }
@@ -43,7 +48,8 @@ void	eat(t_philo *philo)
 	ft_usleep(philo->rules->eat);
 	philo->meals++;
 	pthread_mutex_unlock(philo->l_fork);
-	pthread_mutex_unlock(philo->r_fork);
+	if (philo->l_fork != philo->r_fork)
+		pthread_mutex_unlock(philo->r_fork);
 }
 
 //routine for thread, only stops if philosopher dies
@@ -57,12 +63,26 @@ void	*do_philo(void *arg)
 	rules = philo->rules;
 	if ((philo->num + 1) % 2 && rules->phil_n > 1)
 		ft_usleep(rules->eat);
-	while (!rules->stop && !rules->all_eat)
+	while (1)
 	{
+		pthread_mutex_lock(&rules->lock_stop_all_eat);
+		if (rules->stop || rules->all_eat)
+		{
+			pthread_mutex_unlock(&rules->lock_stop_all_eat);
+			break ;
+		}
+		pthread_mutex_unlock(&rules->lock_stop_all_eat);
 		eat(philo);
 		print_status("is sleeping\n", philo, 1);
 		ft_usleep(rules->sleep);
 		print_status("is thinking\n", philo, 1);
 	}
+/* 	while (!rules->stop && !rules->all_eat)
+	{
+		eat(philo);
+		print_status("is sleeping\n", philo, 1);
+		ft_usleep(rules->sleep);
+		print_status("is thinking\n", philo, 1);
+	} */
 	return (NULL);
 }

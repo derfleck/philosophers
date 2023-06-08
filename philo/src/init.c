@@ -60,7 +60,8 @@ pthread_mutex_t	*init_forks(t_rules *rules)
 		i++;
 	}
 	if (pthread_mutex_init(&rules->lock_eat, NULL) != 0 || \
-		pthread_mutex_init(&rules->lock_print, NULL) != 0)
+		pthread_mutex_init(&rules->lock_print, NULL) != 0 || \
+		pthread_mutex_init(&rules->lock_stop_all_eat, NULL) != 0)
 		return (init_error(forks));
 	return (forks);
 }

@@ -34,6 +34,7 @@ typedef struct s_rules{
 	t_philo			*phil;
 	pthread_mutex_t	lock_print;
 	pthread_mutex_t	lock_eat;
+	pthread_mutex_t lock_stop_all_eat;
 	pthread_mutex_t	*forks;
 }	t_rules;
 

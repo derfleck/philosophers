@@ -26,7 +26,9 @@ void	status_check(t_philo *philo, t_rules *rules)
 			if ((get_time() - philo[i].last_eaten) >= (uint64_t) rules->die)
 			{
 				print_status("died\n", philo + i, 0);
+				pthread_mutex_lock(&rules->lock_stop_all_eat);
 				rules->stop = 1;
+				pthread_mutex_unlock(&rules->lock_stop_all_eat);
 			}
 			pthread_mutex_unlock(&rules->lock_eat);
 			i++;
@@ -47,19 +49,17 @@ void	thread_kill(t_philo *philo, t_rules *rules)
 {
 	int	i;
 
-	if (rules->phil_n == 1)
-		pthread_detach(philo->tid);
-	else
-	{
-		i = 0;
-		while (i < rules->phil_n)
-			pthread_join(philo[i++].tid, NULL);
-	}
 	i = 0;
+	while (i < rules->phil_n)
+	{
+		pthread_join(philo[i].tid, NULL);
+		i++;
+	}
 	while (i < rules->phil_n)
 		pthread_mutex_destroy(&rules->forks[i++]);
 	pthread_mutex_destroy(&rules->lock_eat);
 	pthread_mutex_destroy(&rules->lock_print);
+	pthread_mutex_destroy(&rules->lock_stop_all_eat);
 	free(philo);
 	free(rules->forks);
 }
