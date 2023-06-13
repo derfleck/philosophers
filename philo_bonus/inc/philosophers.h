@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:02:16 by mleitner          #+#    #+#             */
-/*   Updated: 2023/06/13 13:03:47 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:12:16 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,13 @@ typedef struct s_rules{
 	long			eat;
 	long			sleep;
 	long			eat_n;
-	int				stop;
-	int				all_eat;
 	uint64_t		start_time;
 	t_philo			*philo;
 	sem_t			*forks;
 	sem_t			*print;
 	sem_t			*eaten;
 	sem_t			*died;
+	sem_t			*barrier_mutex;
 }	t_rules;
 
 typedef struct s_philo{
@@ -53,24 +52,28 @@ typedef struct s_philo{
 	pid_t			pid;
 	uint64_t		last_eaten;
 	t_rules			*rules;
+	sem_t			*philo_sem;
+	char			*philo_str;
 }	t_philo;
 
 //utils functions
 long		ft_atoi(char *s);
 uint64_t	get_time(void);
 void		ft_usleep(uint64_t time);
+char		*ft_strjoin(char const *s1, char const *s2);
+char		*ft_itoa(int n);
 
 //init functions
-int	create_semaphore(t_rules *rules);
-void	close_semaphore(t_rules *rules);
+int			create_semaphore(t_rules *rules);
+void		close_semaphore(t_rules *rules);
 
 //process functions
-int	process_start(t_rules *rules);
+int			process_start(t_rules *rules);
 
 //routine functions
-void	print_status(char *str, t_philo *philo);
-void	take_fork(t_philo *philo);
-void	eat(t_philo *philo);
-void	do_philo(t_philo *philo);
+void		print_status(char *str, t_philo *philo);
+void		take_fork(t_philo *philo);
+void		eat(t_philo *philo);
+void		do_philo(t_philo *philo);
 
 #endif

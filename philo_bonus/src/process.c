@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 12:55:29 by mleitner          #+#    #+#             */
-/*   Updated: 2023/06/13 13:04:49 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:55:22 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,39 @@ static void	*monitor(void *arg)
 	while (1)
 	{
 		sem_wait(rules->died);
+		sem_wait(philo->philo_sem);
 		if (get_time() - philo->last_eaten >= (uint64_t)rules->die)
 		{
 			print_status(" died\n", philo);
 			sem_wait(rules->print);
-			exit (0);
+			exit(0);
 		}
+		sem_post(philo->philo_sem);
 		sem_post(rules->died);
 	}
 	return (NULL);
+}
+
+static void create_tmp_sem(t_philo *philo)
+{
+	char *str;
+
+	str = ft_strjoin("tmp_", ft_itoa(philo->num));
+	philo->philo_sem = sem_open(str, O_CREAT, 0644, 1);
+	philo->philo_str = str;
+	sem_unlink(str);
 }
 
 static void	create_process(t_philo *philo)
 {
 	pthread_t	monitor_id;
 
+	create_tmp_sem(philo);
 	pthread_create(&monitor_id, NULL, monitor, (void *)philo);
 	pthread_detach(monitor_id);
 	do_philo(philo);
+	if (philo->rules->philo)
+		free(philo->rules->philo);
 	exit(0);
 }
 
@@ -63,13 +78,31 @@ static void	wait_processes(t_rules *rules)
 		kill_processes(rules);
 }
 
+void	*meal_checker(void *arg)
+{
+	int		i;
+	t_rules	*rules;
+
+	rules = (void *)arg;
+	i = 0;
+	while (i < rules->phil_n)
+	{
+		sem_wait(rules->eaten);
+		i++;
+	}
+	sem_wait(rules->died);
+	sem_wait(rules->print);
+	exit(0);
+}
+
 int	process_start(t_rules *rules)
 {
-	int	i;
+	int			i;
+	pthread_t	meal_checker_id;
 
 	i = 0;
-	//if (rules->eat_n > 0)
-	//	meal_checker(rules);
+	if (rules->eat_n > 0)
+		pthread_create(&meal_checker_id, NULL, &meal_checker, (void *)rules);
 	rules->start_time = get_time();
 	while (i < rules->phil_n)
 	{
@@ -80,8 +113,12 @@ int	process_start(t_rules *rules)
 		if (rules->philo[i].pid == 0)
 			create_process(&rules->philo[i]);
 		i++;
-		ft_usleep(1);
 	}
+	i = 0;
+	while (i++ < rules->phil_n)
+		sem_post(rules->barrier_mutex);
+	if (rules->eat_n > 0)
+		pthread_join(meal_checker_id, NULL);
 	wait_processes(rules);
 	return (1);
 }
