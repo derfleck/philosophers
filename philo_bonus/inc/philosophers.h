@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 14:02:16 by mleitner          #+#    #+#             */
-/*   Updated: 2023/05/12 11:57:26 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/06/13 13:03:47 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,15 @@
 # include <unistd.h>
 # include <stdint.h>
 # include <string.h>
+# include <semaphore.h>
+# include <fcntl.h>
+# include <signal.h>
+# include <sys/wait.h>
+
+# define SEM 0
+# define PHI 1
+# define PRO 2
+# define ARG 3
 
 typedef struct s_philo	t_philo;
 
@@ -31,46 +40,37 @@ typedef struct s_rules{
 	int				stop;
 	int				all_eat;
 	uint64_t		start_time;
-	t_philo			*phil;
-	pthread_mutex_t	lock_print;
-	pthread_mutex_t	lock_eat;
-	pthread_mutex_t	lock_stop_all_eat;
-	pthread_mutex_t	*forks;
-	int				*forks_val;
+	t_philo			*philo;
+	sem_t			*forks;
+	sem_t			*print;
+	sem_t			*eaten;
+	sem_t			*died;
 }	t_rules;
 
 typedef struct s_philo{
 	unsigned int	num;
 	unsigned int	meals;
-	pthread_t		tid;
+	pid_t			pid;
 	uint64_t		last_eaten;
 	t_rules			*rules;
-	pthread_mutex_t	*l_fork;
-	pthread_mutex_t	*r_fork;
-	int				*l_fork_val;
-	int				*r_fork_val;
 }	t_philo;
 
 //utils functions
-long			ft_atoi(char *s);
-void			set_rules(t_rules *rules, int argc, char **argv);
-uint64_t		get_time(void);
-void			ft_usleep(uint64_t time);
+long		ft_atoi(char *s);
+uint64_t	get_time(void);
+void		ft_usleep(uint64_t time);
 
 //init functions
-int				create_philos(t_rules *rules);
-pthread_mutex_t	*init_forks(t_rules *rules);
-void			init_philos(t_rules *rules, pthread_mutex_t *forks);
+int	create_semaphore(t_rules *rules);
+void	close_semaphore(t_rules *rules);
 
-//thread functions
-void			status_check(t_philo *philo, t_rules *rules);
-void			thread_kill(t_philo *philo, t_rules *rules);
-int				thread_start(t_philo *philo);
+//process functions
+int	process_start(t_rules *rules);
 
 //routine functions
-void			print_status(char *str, t_philo *philo, int status);
-void			take_fork(t_philo *philo);
-void			eat(t_philo *philo);
-void			*do_philo(void *arg);
+void	print_status(char *str, t_philo *philo);
+void	take_fork(t_philo *philo);
+void	eat(t_philo *philo);
+void	do_philo(t_philo *philo);
 
 #endif

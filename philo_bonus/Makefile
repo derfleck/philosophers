@@ -3,15 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
+#    By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/05/12 09:59:35 by mleitner         ###   ########.fr        #
+#    Updated: 2023/06/13 13:04:10 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME			:= philo_bonus
-BONUSNAME		:= philo_bonus
 CC				:= cc
 RM		    	:= rm -f
 FLAGS			:= -Wall -Wextra -Werror
@@ -21,7 +20,7 @@ SRCSDIR			:= ./src/
 SRCSLIST		:= main.c \
 					utils.c \
 					init.c \
-					threads.c \
+					process.c \
 					routine.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 BONUSSRCSLIST	:= ${SRCSLIST:.c=_bonus.c}
@@ -39,9 +38,6 @@ INCS			:= -I${HEADDIR} -pthread
 
 ${NAME}:		${OBJSDIR} ${OBJS}
 				${CC} ${FLAGS} ${DEBUG} ${OBJS} -o ${NAME} ${INCS}
-
-${BONUSNAME}:	${OBJSDIR} ${BONUSOBJS}
-				${CC} ${FLAGS} ${DEBUG} ${BONUSOBJS} -o ${BONUSNAME} ${INCS}
 
 ${OBJSDIR}%.o:	${SRCSDIR}%.c
 				${CC} ${FLAGS} ${DEBUG} ${INCS} -c $< -o $@
@@ -61,8 +57,6 @@ fclean:			clean
 				${RM} ${BONUSNAME}
 
 re:				fclean all
-
-bonus:			${BONUSNAME}
 
 test:			all
 				./${NAME} 1 800 200 200
