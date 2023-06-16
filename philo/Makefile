@@ -15,7 +15,7 @@ BONUSNAME		:= philo_bonus
 CC				:= cc
 RM		    	:= rm -f
 FLAGS			:= -Wall -Wextra -Werror
-DEBUG			:= -g
+DEBUG			:= -g -fsanitize=thread
 
 SRCSDIR			:= ./src/
 SRCSLIST		:= main.c \

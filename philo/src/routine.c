@@ -56,9 +56,9 @@ void	eat(t_philo *philo)
 	pthread_mutex_unlock(philo->l_fork);
 	if (philo->l_fork != philo->r_fork)
 	{
-		pthread_mutex_unlock(philo->r_fork);
 		if (*(philo->r_fork_val) == 0)
 			*(philo->r_fork_val) = 1;
+		pthread_mutex_unlock(philo->r_fork);
 	}
 }
 
