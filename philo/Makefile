@@ -6,7 +6,7 @@
 #    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/05/12 09:59:35 by mleitner         ###   ########.fr        #
+#    Updated: 2023/06/17 00:06:54 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ BONUSNAME		:= philo_bonus
 CC				:= cc
 RM		    	:= rm -f
 FLAGS			:= -Wall -Wextra -Werror
-DEBUG			:= -g -fsanitize=thread
+DEBUG			:= -g
 
 SRCSDIR			:= ./src/
 SRCSLIST		:= main.c \

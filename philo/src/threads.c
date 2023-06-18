@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 18:24:22 by mleitner          #+#    #+#             */
-/*   Updated: 2023/05/12 12:03:54 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/06/18 13:28:11 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@ static void	eat_check(t_philo *philo, t_rules *rules)
 	int	i;
 
 	i = 0;
+	pthread_mutex_lock(&rules->lock_eat);
 	while (rules->eat_n && i < rules->phil_n && \
 			philo[i].meals >= rules->eat_n)
 		i++;
+	pthread_mutex_unlock(&rules->lock_eat);
 	if (i == rules->phil_n)
 		rules->all_eat = 1;
 }
