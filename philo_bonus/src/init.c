@@ -6,13 +6,17 @@
 /*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 12:54:21 by mleitner          #+#    #+#             */
-/*   Updated: 2023/06/13 15:03:56 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/06/20 18:56:55 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philosophers.h"
 
 //creates semaphores with default names
+//forks represent total number of forks
+//print protects STDOUT, so only one philo can print at a time
+//barrier_mutex synchronizes processes, so all start at the same time
+//eaten/died ?
 int	create_semaphore(t_rules *rules)
 {
 	sem_unlink("/forks");
@@ -24,7 +28,7 @@ int	create_semaphore(t_rules *rules)
 	rules->eaten = sem_open("/eaten", O_CREAT, 0664, 1);
 	rules->print = sem_open("/print", O_CREAT, 0664, 1);
 	rules->died = sem_open("/died", O_CREAT, 0664, 1);
-	rules->barrier_mutex = sem_open("/barrier_mutex", O_CREAT, 0664, 1);
+	rules->barrier_mutex = sem_open("/barrier_mutex", O_CREAT, 0664, 0);
 	if (!rules->forks || !rules->eaten || !rules->print || !rules->died)
 		return (0);
 	return (1);

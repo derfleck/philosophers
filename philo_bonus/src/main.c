@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 17:49:12 by mleitner          #+#    #+#             */
-/*   Updated: 2023/06/13 15:31:18 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/06/20 18:49:58 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,17 @@ static void	check_rules(t_rules *rules, int argc, char **argv)
 	}
 }
 
+static void print_err2(int status, t_rules *rules)
+{
+	if (status == PRO)
+	{
+		printf("Error initializing processes\n");
+		close_semaphore(rules);
+		if (rules->philo)
+			free(rules->philo);
+	}
+}
+
 static void	print_err(int status, t_rules *rules)
 {
 	if (status == SEM)
@@ -75,6 +86,8 @@ static void	print_err(int status, t_rules *rules)
 		printf("[time to eat] [time to sleep] [optional: number of times");
 		printf(" each philosopher must eat]\n");
 	}
+	else if (status == PRO)
+		print_err2(status, rules);
 	exit (1);
 }
 

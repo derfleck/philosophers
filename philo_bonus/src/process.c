@@ -6,7 +6,7 @@
 /*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 12:55:29 by mleitner          #+#    #+#             */
-/*   Updated: 2023/06/13 16:55:22 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/06/20 19:20:04 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	*monitor(void *arg)
 	rules = philo->rules;
 	while (1)
 	{
-		sem_wait(rules->died);
+		//sem_wait(rules->died);
 		sem_wait(philo->philo_sem);
 		if (get_time() - philo->last_eaten >= (uint64_t)rules->die)
 		{
@@ -30,7 +30,7 @@ static void	*monitor(void *arg)
 			exit(0);
 		}
 		sem_post(philo->philo_sem);
-		sem_post(rules->died);
+		//sem_post(rules->died);
 	}
 	return (NULL);
 }
@@ -38,8 +38,15 @@ static void	*monitor(void *arg)
 static void create_tmp_sem(t_philo *philo)
 {
 	char *str;
+	char *num;
 
-	str = ft_strjoin("tmp_", ft_itoa(philo->num));
+	num = ft_itoa(philo->num);
+	if (!num)
+		return ;
+	str = ft_strjoin("tmp_", num);
+	free(num);
+	if (!str)
+		return ;
 	philo->philo_sem = sem_open(str, O_CREAT, 0644, 1);
 	philo->philo_str = str;
 	sem_unlink(str);
@@ -90,11 +97,13 @@ void	*meal_checker(void *arg)
 		sem_wait(rules->eaten);
 		i++;
 	}
-	sem_wait(rules->died);
+	//sem_wait(rules->died);
 	sem_wait(rules->print);
 	exit(0);
 }
 
+//starts all processes by forking
+//lifts barrier_mutex after initializing to synchronize start
 int	process_start(t_rules *rules)
 {
 	int			i;

@@ -6,7 +6,7 @@
 #    By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/06/13 15:31:12 by mleitner         ###   ########.fr        #
+#    Updated: 2023/06/20 18:42:11 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,19 +19,16 @@ DEBUG			:= -g
 SRCSDIR			:= ./src/
 SRCSLIST		:= main.c \
 					utils.c \
+					utils2.c \
 					init.c \
 					process.c \
 					routine.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
-BONUSSRCSLIST	:= ${SRCSLIST:.c=_bonus.c}
-BONUSSRCS		:= $(addprefix ${SRCSDIR}, ${BONUSSRCSLIST})
 
 OBJSDIR			:= ./obj/
 OBJSLIST		:= ${SRCSLIST:.c=.o}
 OBJS			:= $(addprefix ${OBJSDIR}, ${OBJSLIST})
 
-BONUSOBJSLIST	:= ${BONUSSRCSLIST:.c=.o}
-BONUSOBJS		:= $(addprefix ${OBJSDIR}, ${BONUSOBJSLIST})
 HEADDIR			:= ./inc/
 
 INCS			:= -I${HEADDIR} -pthread
@@ -45,7 +42,7 @@ ${OBJSDIR}%.o:	${SRCSDIR}%.c
 ${OBJSDIR}:
 				mkdir -p ${OBJSDIR}
 
-.PHONY:			all clean fclean re bonus test bonustest
+.PHONY:			all clean fclean re
 
 all:			${NAME}
 
@@ -57,6 +54,3 @@ fclean:			clean
 				${RM} ${BONUSNAME}
 
 re:				fclean all
-
-test:			all
-				./${NAME} 1 800 200 200
