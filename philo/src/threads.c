@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 18:24:22 by mleitner          #+#    #+#             */
-/*   Updated: 2023/06/18 13:28:11 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/06/30 14:07:14 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,20 @@ static void	eat_check(t_philo *philo, t_rules *rules)
 		i++;
 	pthread_mutex_unlock(&rules->lock_eat);
 	if (i == rules->phil_n)
+	{
+		pthread_mutex_lock(&philo->rules->lock_stop_all_eat);
 		rules->all_eat = 1;
+		pthread_mutex_unlock(&philo->rules->lock_stop_all_eat);
+	}
+}
+
+static int	status_helper(t_rules *rules)
+{
+	int	i;
+
+	i = rules->stop;
+	pthread_mutex_unlock(&rules->lock_stop_all_eat);
+	return (i);
 }
 
 //checks continuously if threads are alive or have eaten as required
@@ -36,20 +49,21 @@ void	status_check(t_philo *philo, t_rules *rules)
 	while (!rules->all_eat)
 	{
 		i = 0;
+		pthread_mutex_lock(&rules->lock_stop_all_eat);
 		while (i < rules->phil_n && !rules->stop)
 		{
+			pthread_mutex_unlock(&rules->lock_stop_all_eat);
 			pthread_mutex_lock(&rules->lock_eat);
 			if ((get_time() - philo[i].last_eaten) >= (uint64_t) rules->die)
 			{
 				print_status("died\n", philo + i, 0);
-				pthread_mutex_lock(&rules->lock_stop_all_eat);
 				rules->stop = 1;
-				pthread_mutex_unlock(&rules->lock_stop_all_eat);
 			}
 			pthread_mutex_unlock(&rules->lock_eat);
 			i++;
+			pthread_mutex_lock(&rules->lock_stop_all_eat);
 		}
-		if (rules->stop)
+		if (status_helper(rules))
 			break ;
 		eat_check(philo, rules);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 18:26:18 by mleitner          #+#    #+#             */
-/*   Updated: 2023/06/17 00:14:11 by mleitner         ###   ########.fr       */
+/*   Updated: 2023/06/30 13:22:52 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,11 @@
 void	print_status(char *str, t_philo *philo, int status)
 {
 	pthread_mutex_lock(&philo->rules->lock_print);
+	pthread_mutex_lock(&philo->rules->lock_stop_all_eat);
 	if (!philo->rules->stop && !philo->rules->all_eat)
 		printf("%ld %d %s", get_time() - philo->rules->start_time, \
 		philo->num + 1, str);
+	pthread_mutex_unlock(&philo->rules->lock_stop_all_eat);
 	if (status)
 		pthread_mutex_unlock(&philo->rules->lock_print);
 }
